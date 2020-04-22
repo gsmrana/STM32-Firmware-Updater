@@ -15,7 +15,7 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_5D19002C47AF6CE089ECA46221AD1C42"
+        "MsmKey" = "8:_8D000A79A1624F77D93688A85737A73D"
         "OwnerKey" = "8:_98610852C448498AAAAFE23D89452590"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -46,7 +46,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_5D19002C47AF6CE089ECA46221AD1C42"
+        "OwnerKey" = "8:_8D000A79A1624F77D93688A85737A73D"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -164,14 +164,14 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_5D19002C47AF6CE089ECA46221AD1C42"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_8D000A79A1624F77D93688A85737A73D"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:LibUsbDotNet.LibUsbDotNet, Version=2.2.0.0, Culture=neutral, PublicKeyToken=c677239abe1e02a9, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_5D19002C47AF6CE089ECA46221AD1C42"
+                    "_8D000A79A1624F77D93688A85737A73D"
                     {
                     "Name" = "8:LibUsbDotNet.LibUsbDotNet.dll"
                     "Attributes" = "3:512"
@@ -358,15 +358,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:STM32 Firmware Updater"
-        "ProductCode" = "8:{C9748C5D-D860-4474-B975-C5BF016103DB}"
-        "PackageCode" = "8:{46053199-2814-4696-B124-6D8F83249109}"
+        "ProductCode" = "8:{FAF65B83-F558-4BE1-B5CB-F01BDE776C84}"
+        "PackageCode" = "8:{5F7C7013-F503-4FB7-BC82-98D950981C35}"
         "UpgradeCode" = "8:{4E1787D2-E0B0-4130-8599-B63200346F49}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.0"
+        "ProductVersion" = "8:1.0.1"
         "Manufacturer" = "8:GSM Project"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:https://github.com/gsmrana"
