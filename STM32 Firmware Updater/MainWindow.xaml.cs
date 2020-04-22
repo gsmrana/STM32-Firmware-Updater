@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -27,9 +28,13 @@ namespace STM32_Firmware_Updater
         string DfuSeDemo = "Tools\\DfuSeDemo.exe";
         string DfuFileMgr = "Tools\\DfuFileMgr.exe";
         string DfuSeCommand = "Tools\\DfuSeCommand.exe";
+        string STDFUTester = "Tools\\STDFUTester.exe";
+
         string DriverX86 = "Drivers\\dpinst_x86.exe";
         string DriverAmd64 = "Drivers\\dpinst_amd64.exe";
         string Vcredist12 = "Environment\\vcredist12_x86.exe";
+
+        readonly string OpenDfuFileFilter = "DFU files(*.dfu)|*.dfu|All files(*.*)|*.*";
 
         readonly StringBuilder cmdresponse = new StringBuilder();
         readonly DispatcherTimer _deviceUpdatetimer = new DispatcherTimer();
@@ -51,6 +56,7 @@ namespace STM32_Firmware_Updater
                 DfuSeDemo = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, DfuSeDemo);
                 DfuFileMgr = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, DfuFileMgr);
                 DfuSeCommand = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, DfuSeCommand);
+                STDFUTester = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, STDFUTester);
                 DriverX86 = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, DriverX86);
                 DriverAmd64 = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, DriverAmd64);
                 Vcredist12 = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Vcredist12);
@@ -131,36 +137,6 @@ namespace STM32_Firmware_Updater
 
         #endregion
 
-        #region Event Handlers
-
-        private void Timer_Tick(object sender, EventArgs e)
-        {
-            try
-            {
-                _deviceUpdatetimer.Stop();
-                RunGetDfuDeviceListThread();
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("Timer_Tick Exception: " + ex.Message);
-            }
-        }
-
-        private void UsbDeviceNotifier_OnDeviceNotify(object sender, DeviceNotifyEventArgs e)
-        {
-            try
-            {
-                Debug.WriteLine(string.Format("UsbEvent --> {0}, {1}", e.EventType, e.DeviceType));
-                _deviceUpdatetimer.Start();
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("UsbDeviceNotifier_OnDeviceNotify Exception: " + ex.Message);
-            }
-        }
-
-        #endregion
-
         #region Helper Methods
 
         private void AppendEventLog(string message, bool appendNewLine = true)
@@ -218,6 +194,129 @@ namespace STM32_Firmware_Updater
 
         #endregion
 
+        #region Win32 API
+
+        [DllImport("User32.dll")]
+        public static extern bool SetForegroundWindow(IntPtr hWnd);
+
+        public static void RunProcess(string filename)
+        {
+            var all_process = Process.GetProcesses();
+            var find_process = Path.GetFileNameWithoutExtension(filename);
+            var process = all_process.FirstOrDefault(p => p.ProcessName == find_process);
+            if (process == null)
+            {
+                Process.Start(filename);
+            }
+            else if (process.MainWindowHandle != IntPtr.Zero)
+            {
+                SetForegroundWindow(process.MainWindowHandle);
+            }
+        }
+
+        #endregion
+
+        #region Toolbar Events
+
+        private void ToolBarButtonOpen_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (_upgradingInProgresss) return;
+                var ofd = new OpenFileDialog { Filter = OpenDfuFileFilter };
+                if (ofd.ShowDialog().Value)
+                    SelectDfuFile(ofd.FileName);
+            }
+            catch (Exception ex)
+            {
+                PopupException(ex.Message);
+            }
+        }
+
+        private void ToolBarButtonConvert_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                RunProcess(DfuFileMgr);
+            }
+            catch (Exception ex)
+            {
+                PopupException(ex.Message);
+            }
+        }
+
+        private void ToolBarButtonAdvance_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                RunProcess(DfuSeDemo);
+            }
+            catch (Exception ex)
+            {
+                PopupException(ex.Message);
+            }
+        }
+
+        private void ToolBarButtonUpdate_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var result = MessageBox.Show("Do you want to browse release page?", "Confirmation",
+                    MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (result == MessageBoxResult.Yes)
+                    Process.Start("https://github.com/gsmrana/STM32-Firmware-Updater/releases");
+            }
+            catch (Exception ex)
+            {
+                PopupException(ex.Message);
+            }
+        }
+
+        private void ToolBarButtonAbout_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var aboutbox = new AboutBox();
+                aboutbox.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                PopupException(ex.Message);
+            }
+        }
+
+        #endregion
+
+        #region Timer and USB Events
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            try
+            {
+                _deviceUpdatetimer.Stop();
+                RunGetDfuDeviceListThread();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Timer_Tick Exception: " + ex.Message);
+            }
+        }
+
+        private void UsbDeviceNotifier_OnDeviceNotify(object sender, DeviceNotifyEventArgs e)
+        {
+            try
+            {
+                Debug.WriteLine(string.Format("UsbEvent --> {0}, {1}", e.EventType, e.DeviceType));
+                _deviceUpdatetimer.Start();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("UsbDeviceNotifier_OnDeviceNotify Exception: " + ex.Message);
+            }
+        }
+
+        #endregion
+
         #region Form Events
 
         private void MainApp_DragEnter(object sender, DragEventArgs e)
@@ -252,28 +351,14 @@ namespace STM32_Firmware_Updater
         {
             try
             {
-                if (e.ClickCount > 1)
-                    Process.Start(DfuSeDemo);
+                if (e.ClickCount >= 2)
+                    RunProcess(STDFUTester);
             }
             catch (Exception ex)
             {
                 PopupException(ex.Message);
             }
         }
-
-        private void TextBlockDeviceName_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            try
-            {
-                if (e.ClickCount > 1)
-                    Process.Start(DfuFileMgr);
-            }
-            catch (Exception ex)
-            {
-                PopupException(ex.Message);
-            }
-        }
-
         private void ButtonUpgrade_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -283,10 +368,7 @@ namespace STM32_Firmware_Updater
 
                 if (!File.Exists(_firmwareFilename))
                 {
-                    var ofd = new OpenFileDialog
-                    {
-                        Filter = "DFU files (*.dfu)|*.dfu|All files (*.*)|*.*"
-                    };
+                    var ofd = new OpenFileDialog { Filter = OpenDfuFileFilter };
                     if (ofd.ShowDialog() != true)
                         return;
 

@@ -8,7 +8,7 @@ using System.Windows;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("STM32 Firmware Updater")]
-[assembly: AssemblyDescription("A .Net tool for updating STM32 MCU application firmware over USB DFU of the system bootloader")]
+[assembly: AssemblyDescription("A .Net tool for updating STM32 MCU application firmware over USB DFU interface of the system bootloader")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("GSM Rana")]
 [assembly: AssemblyProduct("STM32 Firmware Updater")]
