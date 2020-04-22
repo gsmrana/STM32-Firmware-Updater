@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29920.165
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "STM32 Firmware Updater", "STM32 Firmware Updater\STM32 Firmware Updater.csproj", "{91D6BF0E-91A1-4A99-9449-CC0E96EB568B}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "STM32 Firmware Updater Setup", "STM32 Firmware Updater Setup\STM32 Firmware Updater Setup.vdproj", "{C6CC6BA8-7FCE-4093-8278-0AAE48EBF4A4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{91D6BF0E-91A1-4A99-9449-CC0E96EB568B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91D6BF0E-91A1-4A99-9449-CC0E96EB568B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91D6BF0E-91A1-4A99-9449-CC0E96EB568B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91D6BF0E-91A1-4A99-9449-CC0E96EB568B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6CC6BA8-7FCE-4093-8278-0AAE48EBF4A4}.Debug|Any CPU.ActiveCfg = Debug
+		{C6CC6BA8-7FCE-4093-8278-0AAE48EBF4A4}.Release|Any CPU.ActiveCfg = Release
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1534AD43-A15B-4B3D-92F0-86D9677FA7E6}
+	EndGlobalSection
+EndGlobal
